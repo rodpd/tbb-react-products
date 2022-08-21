@@ -1,15 +1,49 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react'
 
 function FilterableItemList(props) {
 
+	const [category, setCategory] = useState('All');
+
+	function filteredItems () {
+		let items = props.data;
+		if ( category != 'All' ) {
+			items = items.filter((item) => item.category.name == category);
+		}
+		return items;
+	}
+
+	function handleCategoryChange(newCategory) {
+		setCategory(newCategory);
+	}
+
 	return (
-		<ItemsList data={props.data} />
+		<div>
+			<Filter onCategoryChange={handleCategoryChange}/>
+			<ItemsList data={filteredItems(category)} />
+		</div>
 	)
 }
 
 function Filter(props) {
 
+	function handleChange(event) {
+		props.onCategoryChange(event.target.value);
+	}
+
+	return (
+	<select name="" id="" className="p-2 mb-4" onChange={handleChange}>
+		<option value="All">All</option>
+		<option value="Aerosol">Aerosol</option>
+		<option value="Alcohol en Aerosol">Alcohol en Aerosol</option>
+		<option value="Alcohol en Gel">Alcohol en Gel</option>
+		<option value="Alcohol en Spray">Alcohol en Spray</option>
+		<option value="Barra">Barra</option>
+		<option value="Jabón Barra">Jabón Barra</option>
+		<option value="Jabon Líquido">Jabon Líquido</option>
+		<option value="Talco">Talco</option>
+	</select>
+	)
 }
 
 function ItemsList(props) {
@@ -19,7 +53,8 @@ function ItemsList(props) {
 	category={item.category.name}
 	imgSrc={item.images[0].asset.url} 
 	imgAlt={item.images[0].alt}
-	description={item.shortDescription} />
+	description={item.shortDescription}
+	key={item.id} />
 	);
 
 	return (
